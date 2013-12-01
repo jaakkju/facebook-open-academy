@@ -1,4 +1,7 @@
 /**
+ * Author: Juhani Jaakkola
+ * Started: 01.12.2013
+ * 
  * Module dependencies.
  */
 
@@ -59,12 +62,12 @@ http.createServer(app).listen(app.get('port'), function() {
 		console.log(analyzation.from);
 		console.log(analyzation.to);
 		for (var key in analyzation.categories) {
-			console.log(key + ' ' + analyzation.categories[key] / analyzation.days)
+			console.log(key + ' ' + analyzation.categories[key] / analyzation.days);
 		}
 
 		console.log('Incident locations and occurrencies between ' + analyzation.from + ' - ' + analyzation.to);
 		for (var key in analyzation.locations) {
-			console.log(key + ' ' + analyzation.locations[key])
+			console.log(key + ' ' + analyzation.locations[key]);
 		}
 	}
 

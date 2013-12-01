@@ -4,6 +4,10 @@ html
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
     script(src="/javascripts/script.js")
+    script(src="/javascripts/jquery.js")
+    script(src="/javascripts/jquery.flot.js")
+    script.
+      var data = !{JSON.stringify(analyzation)};
   body
     h1= title
     div#contained
@@ -19,3 +23,5 @@ html
               tr
                 td #{location}: #{analyzation.locations[location]}
           -}
+      div#chartcategories
+      div#chartlocations
