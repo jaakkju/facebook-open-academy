@@ -9,11 +9,20 @@ a {
 
 .data {
 	margin: 20px;
-	width: 10%;
+	width: 200px;
 	float: left;
 }
 
-#chartlocations {
-	width: 80%;
+#chartcategories {
+	width: 1200px;
+	height: 600px;
 	float: right;
+	margin: 20px;
+}
+
+#chartlocations {
+	width: 1200px;
+	height: 600px;
+	float: right;
+	margin: 20px;
 }

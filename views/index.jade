@@ -12,16 +12,21 @@ html
     h1= title
     div#contained
       div.data.categories
+        h2 Categories
         table
           - for(var category in analyzation.categories) {
               tr
                 td #{category}: #{analyzation.categories[category]}
           -}
       div.data.locations
+        h2 Locations
         table
           - for(var location in analyzation.locations) {
               tr
                 td #{location}: #{analyzation.locations[location]}
           -}
+          
       div#chartcategories
+        h2 Categories chart
       div#chartlocations
+        h2 Locations chart
