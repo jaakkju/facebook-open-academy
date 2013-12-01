@@ -1,0 +1,9 @@
+# Folders
+###########
+cert-fi_data/
+node_modules/
+
+# Settings
+##############################
+.project
+

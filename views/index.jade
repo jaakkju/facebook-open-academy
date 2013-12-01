@@ -1,0 +1,21 @@
+doctype 5
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src="/javascripts/script.js")
+  body
+    h1= title
+    div#contained
+      div.data.categories
+        table
+          - for(var category in analyzation.categories) {
+              tr
+                td #{category}: #{analyzation.categories[category]}
+          -}
+      div.data.locations
+        table
+          - for(var location in analyzation.locations) {
+              tr
+                td #{location}: #{analyzation.locations[location]}
+          -}
