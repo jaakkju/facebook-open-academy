@@ -129,7 +129,7 @@ http.createServer(app).listen(app.get('port'), function() {
 		files_JSON.forEach(function(JSON_file) {
 			file_counter--;
 
-			var day_counter = JSON_file.autoreporter.opendata.length
+			var day_counter = JSON_file.autoreporter.opendata.length;
 			JSON_file.autoreporter.opendata.forEach(function(day) {
 				day_counter--;
 
@@ -205,7 +205,6 @@ http.createServer(app).listen(app.get('port'), function() {
 					throw err;
 
 				analyzation = JSON.parse(data.toString());
-				// TODO printAnalyzation();
 			});
 		} else {
 
