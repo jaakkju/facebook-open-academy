@@ -1,7 +1,15 @@
 /**
  * Author: Juhani Jaakkola
  * Started: 01.12.2013
- * 
+ * Project name: facebook-open-academy
+ * GitHub: https://github.com/mrnullbox/facebook-open-academy
+ *
+ * Call chaing in this solution after creating http.createServer if file does not exist
+ * getZipZile -> unZipData -> analyzeData -> printAnalyzation
+ */
+
+ 
+ /**
  * Module dependencies.
  */
 
@@ -15,11 +23,11 @@ var app = express();
 
 // file variables
 var file_name = 'json.zip';
-var file_ext = true;
 var file_url = 'http://pilvilinna.cert.fi/opendata/autoreporter/json.zip';
+var file_analyzation = __dirname + '/cert-fi_data/analyzation.json';
 var file_dest = __dirname + '/cert-fi_data/' + file_name;
 var files_JSON;
-var file_analyzation = __dirname + '/cert-fi_data/analyzation.json';
+
 
 var analyzation = {
 	done : false,
@@ -71,61 +79,7 @@ http.createServer(app).listen(app.get('port'), function() {
 		}
 	}
 
-	var unZipData = function unZipData(analyzeData) {
-		var zip = new AdmZip(file_dest);
-		var zipEntries = zip.getEntries();
-
-		console.log(file_name + " contains " + zipEntries.length + " files, extracting to array");
-		files_JSON = new Array(zipEntries.length);
-
-		// Unzippping everything to data array as JSON objects then exec callback
-		var index = 0;
-		zipEntries.forEach(function(entry) {
-			var entryName = entry.entryName;
-
-			zip.readAsTextAsync(entry, function(data) {
-				console.log('Decompressing ' + entryName + ' as a JSON object to array index ' + index);
-				files_JSON[index++] = JSON.parse(data);
-
-				if (index == zipEntries.length) {
-					analyzeData();
-				}
-			});
-		});
-	};
-
-	function getZipfile(unZipData, analyzeData) {
-		console.log('Downloading file.. ' + file_url);
-
-		var lenght = 0;
-		var file = fs.createWriteStream(file_dest);
-		var request = http.get(file_url, function(response) {
-
-			var change = -1;
-			response.on('data', function(chunk) {
-				file.write(chunk);
-				lenght += chunk.length;
-
-				var percent = Math.round((lenght / response.headers['content-length']) * 100);
-
-				if (change != percent) {
-					change = percent;
-					console.log('Downloading file ' + file_name + " " + percent + '%');
-				}
-			});
-
-			response.on('end', function() {
-				file.close();
-				console.log(file_name + ' file downloaded');
-			});
-
-			file.on('close', function() {
-				unZipData(analyzeData);
-			});
-		});
-	};
-
-	var analyzeData = function analyzeData() {
+	function analyzeData() {
 		console.log("Data structure ready.. analyzing data...");
 
 		var file_counter = files_JSON.length;
@@ -197,6 +151,60 @@ http.createServer(app).listen(app.get('port'), function() {
 		});
 	};
 
+	function unZipData() {
+		var zip = new AdmZip(file_dest);
+		var zipEntries = zip.getEntries();
+
+		console.log(file_name + " contains " + zipEntries.length + " files, extracting to array");
+		files_JSON = new Array(zipEntries.length);
+
+		// Unzippping everything to data array as JSON objects then exec callback
+		var index = 0;
+		zipEntries.forEach(function(entry) {
+			var entryName = entry.entryName;
+
+			zip.readAsTextAsync(entry, function(data) {
+				console.log('Decompressing ' + entryName + ' as a JSON object to array index ' + index);
+				files_JSON[index++] = JSON.parse(data);
+
+				if (index == zipEntries.length) {
+					analyzeData();
+				}
+			});
+		});
+	};
+
+	function getZipfile() {
+		console.log('Downloading file.. ' + file_url);
+
+		var lenght = 0;
+		var file = fs.createWriteStream(file_dest);
+		var request = http.get(file_url, function(response) {
+
+			var change = -1;
+			response.on('data', function(chunk) {
+				file.write(chunk);
+				lenght += chunk.length;
+
+				var percent = Math.round((lenght / response.headers['content-length']) * 100);
+
+				if (change != percent) {
+					change = percent;
+					console.log('Downloading file ' + file_name + " " + percent + '%');
+				}
+			});
+
+			response.on('end', function() {
+				file.close();
+				console.log(file_name + ' file downloaded');
+			});
+
+			file.on('close', function() {
+				unZipData(analyzeData);
+			});
+		});
+	};
+
 	// TODO testing
 	// TODO error handling, http, unzip, analyzation
 
@@ -217,8 +225,7 @@ http.createServer(app).listen(app.get('port'), function() {
 					unZipData(analyzeData);
 				} else {
 					// json.zip does not exist downloading file
-					// TODO Create a nicer way to control flow, long-callback chains are not nice, every function is in scope so lets not use callback parameters
-					getZipfile(unZipData, analyzeData);
+					getZipfile();
 				}
 			});
 		}
