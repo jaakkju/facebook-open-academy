@@ -56,8 +56,19 @@ if ('development' == app.get('env')) {
 app.get('/', function(req, res) {
 	res.render('index', {
 		title : 'CERT-FI: Open Data - Statistics from Autoreporter',
+		subtitle : new Date(analyzationResult.from).toDateString() + ' - ' + new Date(analyzationResult.to).toDateString(),
+		reset : config.reset,
 		analyzationResult : analyzationResult
 	});
+});
+
+app.get('/reset', function(req, res) {
+	res.redirect('back');
+
+	if (config.reset) {
+		// TODO reset functionality
+		console.log('reset');
+	}
 });
 
 http.createServer(app).listen(app.get('port'), function() {
@@ -106,7 +117,6 @@ http.createServer(app).listen(app.get('port'), function() {
 						ipaddressCounter--;
 
 						// Creating new location to object if does not exist
-						// TODO there is probably a nicer way to write this
 						if (analyzationResult.locations.hasOwnProperty(ipaddress.city)) {
 							analyzationResult.locations[ipaddress.city]++;
 						} else {
@@ -118,7 +128,6 @@ http.createServer(app).listen(app.get('port'), function() {
 							incidentCounter--;
 
 							// Creating new category to object if does not exist
-							// TODO there is probably a nicer way to write this
 							if (analyzationResult.categories.hasOwnProperty(incident.category.main)) {
 								analyzationResult.categories[incident.category.main]++;
 							} else {
@@ -204,35 +213,30 @@ http.createServer(app).listen(app.get('port'), function() {
 		});
 	};
 
-	// Cathing errors
-	try {
-		fs.exists(config.pathAnalyzation, function(exists) {
-			// If analyzation exists we just read the data to variable
-			if (exists) {
-				fs.readFile(config.pathAnalyzation, function(err, data) {
-					if (err)
-						throw err;
+	fs.exists(config.pathAnalyzation, function(exists) {
+		// If analyzation exists we just read the data to variable
+		if (exists) {
+			fs.readFile(config.pathAnalyzation, function(err, data) {
+				if (err)
+					throw err;
 
-					console.log('Analyzation file exist: ' + config.pathAnalyzation);
-					analyzationResult = JSON.parse(data.toString());
-					if (config.print)
-						printAnalyzationResult();
-				});
-			} else {
-				// Analyzation file does not exist, checking json.zip
-				fs.exists(config.pathJSON, function(exists) {
-					if (exists) {
-						unZipData();
-					} else {
-						// json.zip does not exist downloading file
-						console.warn(config.JSON + ' file does not exist...');
-						getZipfile();
-					}
-				});
-			}
-		});
-	} catch (err) {
-		console.error("Error: " + err);
-	}
+				console.log('Analyzation file exist: ' + config.pathAnalyzation);
+				analyzationResult = JSON.parse(data.toString());
+				if (config.print)
+					printAnalyzationResult();
+			});
+		} else {
+			// Analyzation file does not exist, checking json.zip
+			fs.exists(config.pathJSON, function(exists) {
+				if (exists) {
+					unZipData();
+				} else {
+					// json.zip does not exist downloading file
+					console.warn(config.JSON + ' file does not exist...');
+					getZipfile();
+				}
+			});
+		}
+	});
 
 });
