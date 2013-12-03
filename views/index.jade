@@ -2,31 +2,36 @@ doctype 5
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-    script(src="/javascripts/script.js")
     script(src="/javascripts/jquery.js")
     script(src="/javascripts/jquery.flot.js")
+    script(src="/javascripts/jquery.tablesorter.js")
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src="/javascripts/script.js")
     script.
-      var data = !{JSON.stringify(analyzation)};
+      var data = !{JSON.stringify(analyzationResult)};
   body
     h1= title
-    div#contained
-      div.data.categories
-        h2 Categories
+    div#container
+      div#chartContainer
+        div#chartcategories
+          h2 Categories chart
+        div#chartlocations
+          h2 Locations chart
+      div#dataContainer
         table
-          - for(var category in analyzation.categories) {
+          tr
+            th Categories
+            th
+          - for(var category in analyzationResult.categories) {
               tr
-                td #{category}: #{analyzation.categories[category]}
+                td #{category}
+                td #{analyzationResult.categories[category]}
           -}
-      div.data.locations
-        h2 Locations
-        table
-          - for(var location in analyzation.locations) {
+          tr
+            th Locations
+            th
+          - for(var location in analyzationResult.locations) {
               tr
-                td #{location}: #{analyzation.locations[location]}
+                td #{location} 
+                td #{analyzationResult.locations[location]}
           -}
-          
-      div#chartcategories
-        h2 Categories chart
-      div#chartlocations
-        h2 Locations chart

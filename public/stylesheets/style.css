@@ -1,28 +1,52 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
-  color: #00B7FF;
+   color: #00B7FF;
 }
 
-.data {
-	margin: 20px;
-	width: 200px;
-	float: left;
+h1 {
+   color: #79981a;
+   text-align: center;
+   margin-bottom: 40px;
+}
+
+#chartContainer {
+   float: left;
+   width: 80%;
 }
 
 #chartcategories {
-	width: 1200px;
-	height: 600px;
-	float: right;
-	margin: 20px;
+   width: 100%;
+   height: 700px;
 }
 
 #chartlocations {
-	width: 1200px;
-	height: 600px;
-	float: right;
-	margin: 20px;
+   width: 100%;
+   height: 700px;
+}
+
+#dataContainer {
+   width: 19%;
+   height: 1390px;
+   float: right;
+   overflow-y: scroll;
+   border: 1px dotted #79981A;
+}
+
+table {
+   width: 100%;
+}
+
+table td {
+   border: 1px solid #98BF21;
+   font-size: 1em;
+   padding: 3px 7px 2px;
+}
+table th {
+   background-color: #A7C942;
+   color: #FFFFFF;
+   padding: 5px 7px 5px;
+   text-align: left;
 }

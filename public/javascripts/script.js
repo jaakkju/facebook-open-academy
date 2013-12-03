@@ -1,44 +1,71 @@
-window.onload = function() {
+$(document).ready(function() {
 	if (!data.done) {
 		document.write("<h1>Waiting for data</h1>");
 		timedRefresh(5000);
 	} else {
 		drawCategoriesHistogram();
 		drawLocationHistogram();
+		$("table").tablesorter({
+			sortList : [[0, 0]]
+		});
 	}
-};
+});
 
 function timedRefresh(timeoutPeriod) {
 	setTimeout("location.reload(true);", timeoutPeriod);
 }
 
 function drawCategoriesHistogram() {
-	var chartData = new Array();
+	var cData = new Array();
+	var cTicks = new Array();
 	var index = 0;
 	for (var key in data.categories) {
-		chartData.push([index++, data.categories[key] ]);
+		cTicks.push([index, key]);
+		cData.push([index++, data.categories[key]]);
 	};
-	
-	$.plot("#chartcategories", [{
-		data : chartData,
+
+	var dataSet = [{
 		bars : {
-			show : true
+			show : true,
+			fill : 1,
+			align : "center",
+			barWidth: 0.7
+		},
+		data : cData,
+		color : "#98BF21"
+	}];
+
+	var options = {
+		xaxis : {
+			ticks : cTicks,
+			autoscaleMargin: 0.010
 		}
-	}]);
+	};
+
+	$.plot("#chartcategories", dataSet, options);
 }
 
-
 function drawLocationHistogram() {
-	var chartData = new Array();
+	var cData = new Array();
 	var index = 0;
 	for (var key in data.locations) {
-		chartData.push([index++, data.locations[key] ]);
+		cData.push([index++, data.locations[key]]);
 	};
-	
-	$.plot("#chartlocations", [{
-		data : chartData,
+
+	var dataSet = [{
+		data : cData,
+		color : "#98BF21",
 		bars : {
-			show : true
+			show : true,
+			fill : 1
 		}
-	}]);
+	}];
+
+	var options = {
+		xaxis : {
+			ticks : []
+		}
+	};
+
+	$.plot("#chartlocations", dataSet, options);
 }
