@@ -9,36 +9,39 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
     script(src="/javascripts/script.js")
     script.
-      var data = !{JSON.stringify(analyzationResult)};
+      var data = !{JSON.stringify(result)};
   body
     h1= title
-    h2= subtitle
-    div#container
-      div#chartContainer
-        div#chartcategories
-          h2 Categories chart
-        div#chartlocations
-          h2 Locations chart
-      div#dataContainer
-        table
-          tr
-            th Category
-            th freq/day
-          - for(var category in analyzationResult.categories) {
-            - var calc = (analyzationResult.categories[category] / analyzationResult.days).toFixed(3)
-              tr
-                td #{category}
-                td= calc
-          -}
-          tr
-            th Location
-            th sum
-          - for(var location in analyzationResult.locations) {
-              tr
-                td #{location} 
-                td #{analyzationResult.locations[location]}
-          -}
-  if reset
-    div.reset
-      p Warning reset makes the server to download data again!
-      button Reset
+    if result.done
+      h2= subtitle
+      div#container
+        div#chartContainer
+          div#chartcategories
+            h2 Categories chart
+          div#chartlocations
+            h2 Locations chart
+        div#dataContainer
+          table
+            tr
+              th Category
+              th freq/day
+            - for(var category in result.categories) {
+              - var calc = (result.categories[category] / result.days).toFixed(3)
+                tr
+                  td #{category}
+                  td= calc
+            -}
+            tr
+              th Location
+              th sum
+            - for(var location in result.locations) {
+                tr
+                  td #{location} 
+                  td #{result.locations[location]}
+            -}
+    if reset
+      div.reset
+        p Warning: reset makes the server to download data again!
+        form(action='/reset', method='get')
+          input(type='submit', value='Reset')
+        
