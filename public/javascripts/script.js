@@ -1,6 +1,5 @@
 $(document).ready(function() {
 	if (!data.done) {
-		document.write("<h1>Waiting for data</h1>");
 		timedRefresh(5000);
 	} else {
 		drawCategoriesHistogram();
