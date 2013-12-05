@@ -15,10 +15,14 @@ config.JSON_url = 'http://pilvilinna.cert.fi/opendata/autoreporter/json.zip';
 
 // local file names
 config.JSON = 'json.zip';
-config.analyzation = 'analyzation.json';
+config.analyzation = 'result.json';
 config.folder = 'cert-fi_data';
+
+// Worker file name
+config.worker = 'worker.js';
 
 // file destinations, do not touch
 config.pathJSON = path.join(__dirname, config.folder, config.JSON);
 config.pathAnalyzation = path.join(__dirname, config.folder, config.analyzation);
 config.pathFolder = path.join(__dirname, config.folder);
+config.pathWorker = path.join(__dirname, config.worker);
