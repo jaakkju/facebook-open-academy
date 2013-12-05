@@ -42,9 +42,6 @@ h2 {
 #dataContainer {
    float: left;
    width: 20%;
-   height: 1210px;
-   overflow-y: scroll;
-   border: 1px dotted #79981A;
    margin-left: 20px;
 }
 
@@ -80,6 +77,6 @@ table th {
    font-size: smaller;
 }
 
-.reset button {
+.reset input {
 	width: 100px;
 }
