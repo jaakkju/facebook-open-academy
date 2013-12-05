@@ -22,3 +22,7 @@ throw Utils.Errors.INVALID_FORMAT;
 Invalid or unsupported zip format. No END header found
 
 https://github.com/cthackers/adm-zip
+
+License:
+
+(The MIT License)
