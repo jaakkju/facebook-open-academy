@@ -1,10 +1,10 @@
 # Facebook Open Academy #
-* Assignment for Uni. Helsinki Software Factory / Facebook Open Academy
-* http://www.softwarefactory.cc/2013/11/25/facebook-open-academy-2014/
-* Author: Juhani Jaakkola
-* Email: juhani@jaakkola.net
-* Homepage: http://juhani@jaakkola.net
-* Started: 01.12.2013
+- Assignment for Uni. Helsinki Software Factory / Facebook Open Academy
+- http://www.softwarefactory.cc/2013/11/25/facebook-open-academy-2014/
+- Author: Juhani Jaakkola
+- Email: juhani@jaakkola.net
+- Homepage: http://juhani@jaakkola.net
+- Started: 01.12.2013
 
 ## Installation ##
 
@@ -18,7 +18,7 @@ Before installing make sure you have working node.js and npm package manager
 
 ## Acknowledgements ##
 
-If you encounter following error, remove cert-fi_data folder and run the application again. 
+If you encounter following error, remove **cert-fi_data** folder and run the application again. 
 This is an error with used AdmZip module.
 
 throw Utils.Errors.INVALID_FORMAT;
