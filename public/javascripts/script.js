@@ -4,8 +4,11 @@ $(document).ready(function() {
 	} else {
 		drawCategoriesHistogram();
 		drawLocationHistogram();
-		$("table").tablesorter({
-			sortList : [[0, 0]]
+		$("#categories").tablesorter({
+			sortList : [[1, 1]]
+		});
+		$("#locations").tablesorter({
+			sortList : [[1, 1]]
 		});
 	}
 });
@@ -28,16 +31,27 @@ function drawCategoriesHistogram() {
 			show : true,
 			fill : 1,
 			align : "center",
-			barWidth: 0.7
+			barWidth : 0.5
 		},
 		data : cData,
 		color : "#98BF21"
 	}];
 
 	var options = {
+		grid : {
+			hoverable : true,
+		},
+		yaxis : {
+			// TODO do this with a function
+			ticks : [0, 1, 10, 100, 4000, 1000, 10000, 25000, 50000, 100000, 200000, 400000, 600000, 800000, 1000000],
+			transform : function(x) {
+				return Math.sqrt(Math.sqrt(x));
+			},
+			autoscaleMargin : 0.010
+		},
 		xaxis : {
 			ticks : cTicks,
-			autoscaleMargin: 0.010
+			autoscaleMargin : 0.010
 		}
 	};
 
@@ -61,6 +75,14 @@ function drawLocationHistogram() {
 	}];
 
 	var options = {
+		yaxis : {
+			// TODO do this with a function
+			ticks : [0, 1, 10, 100, 400, 1000, 2500, 5000, 10000, 25000, 50000, 100000, 200000],
+			transform : function(x) {
+				return Math.sqrt(Math.sqrt(x));
+			},
+			autoscaleMargin : 0.010
+		},
 		xaxis : {
 			ticks : []
 		}

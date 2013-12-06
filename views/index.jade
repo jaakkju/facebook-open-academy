@@ -21,19 +21,24 @@ html
           div#chartlocations
             h2 Locations chart
         div#dataContainer
-          table
+          table#categories
+           thead
             tr
               th Category
               th freq/day
+           tbody
             - for(var category in result.categories) {
               - var calc = (result.categories[category] / result.days).toFixed(3)
                 tr
                   td #{category}
                   td= calc
             -}
+          table#locations
+           thead
             tr
               th Location
               th sum
+           tbody
             - for(var location in result.locations) {
                 tr
                   td #{location} 
@@ -41,7 +46,9 @@ html
             -}
     if reset
       div.reset
-        p Warning: reset makes the server to download data again!
+        p Warning: reset makes the server download data again!
         form(action='/reset', method='get')
           input(type='submit', value='Reset')
+    div#tooltip
+
         

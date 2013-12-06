@@ -25,7 +25,7 @@ h2 {
 
 #chartContainer {
    float: left;
-   width: 70%;
+   width: 80%;
 }
 
 #chartcategories {
@@ -42,28 +42,41 @@ h2 {
 #dataContainer {
    float: left;
    width: 20%;
-   margin-left: 20px;
 }
 
 table {
    width: 100%;
+   text-align: left;
 }
 
 table td {
-   border: 1px solid #98BF21;
-   font-size: 1em;
+   border: 1px solid #A7C942;
    padding: 3px 7px 2px;
 }
-table th {
+table thead tr .header {
    background-color: #A7C942;
+	background-image: url(/images/bg.gif);
+	background-repeat: no-repeat;
+	background-position: center right;   
    color: #FFFFFF;
    padding: 5px 7px 5px;
-   text-align: left;
+   cursor: pointer;
+}
+
+table thead tr .headerSortDown, table thead tr .headerSortUp {
+   background-color: #87a235;
+}
+
+table thead tr .headerSortUp {
+   background-image: url(/images/asc.gif);
+}
+table thead tr .headerSortDown {
+   background-image: url(/images/desc.gif);
 }
 
 .reset {
    text-align: center;
-   width: 270px;
+   width: 260px;
    height: 80px;
    border-radius: 15px;
    border: 1px solid #79981A;
@@ -78,5 +91,5 @@ table th {
 }
 
 .reset input {
-	width: 100px;
+   width: 100px;
 }
