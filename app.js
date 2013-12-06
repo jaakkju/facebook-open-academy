@@ -1,6 +1,9 @@
 /**
  * Author: Juhani Jaakkola
  * Started: 01.12.2013
+ * Email: juhani@jaakkola.net
+ * Homepage: http://juhani@jaakkola.net
+ * 
  * Project name: facebook-open-academy
  * GitHub: https://github.com/mrnullbox/facebook-open-academy
  *

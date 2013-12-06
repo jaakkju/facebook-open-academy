@@ -1,5 +1,9 @@
-# Facebook Open Academy  
-Uni. Helsinki#
+# Facebook Open Academy # 
+ * Uni. Helsinki assignment
+ * Author: Juhani Jaakkola
+ * Started: 01.12.2013
+ * Project name: facebook-open-academy
+ * GitHub: https://github.com/mrnullbox/facebook-open-academy
 
 ## Installation ##
 
