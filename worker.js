@@ -121,8 +121,8 @@ function unZipData() {
 					console.error('JSON parsing failed, please delete existing file and try again. Error: ', err);
 					process.exit(1);
 				}
-			})
-		})
+			});
+		});
 	} catch(err) {
 		console.error('Reading ' + config.JSON + ' failed, please delete existing file and try again. Error:', err);
 		process.exit(1);
