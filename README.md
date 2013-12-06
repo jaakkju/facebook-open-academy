@@ -1,4 +1,5 @@
-# Facebook Open Academy assignment Uni Helsinki #
+# Facebook Open Academy #
+# Uni Helsinki assignment #
 
 ## Installation ##
 
@@ -10,6 +11,7 @@ Before installing make sure you have working node.js and npm package manager
 4. Sit back and relax while file downloads and data structure is done
 5. Open browser to localhost:3000
 
+# Acknowledgements #
 
 If you encounter following error, remove cert-fi_data folder and run the application again. 
 This is an error with used AdmZip module.
@@ -20,6 +22,6 @@ Invalid or unsupported zip format. No END header found
 
 https://github.com/cthackers/adm-zip
 
-## License ##
+# License #
 
 (The MIT License)
