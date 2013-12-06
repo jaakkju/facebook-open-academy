@@ -18,7 +18,7 @@ Before installing make sure you have working node.js and npm package manager
 
 ## Acknowledgements ##
 
-If you encounter following error, remove **cert-fi_data** folder and run the application again. 
+If you encounter following error: remove **cert-fi_data** folder and run the application again. 
 This is an error with used AdmZip module.
 
 throw Utils.Errors.INVALID_FORMAT;
