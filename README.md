@@ -1,4 +1,5 @@
-# Facebook Open Academy - Uni. Helsinki#
+# Facebook Open Academy  
+Uni. Helsinki#
 
 ## Installation ##
 
@@ -12,7 +13,6 @@ Before installing make sure you have working node.js and npm package manager
 
 ## Acknowledgements ##
 
-...
 If you encounter following error, remove cert-fi_data folder and run the application again. 
 This is an error with used AdmZip module.
 
@@ -21,7 +21,6 @@ throw Utils.Errors.INVALID_FORMAT;
 Invalid or unsupported zip format. No END header found
 
 https://github.com/cthackers/adm-zip
-...
 
 ## License ##
 
