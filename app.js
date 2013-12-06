@@ -3,9 +3,9 @@
  * Started: 01.12.2013
  * Email: juhani@jaakkola.net
  * Homepage: http://juhani@jaakkola.net
- * 
+ *
  * Project name: facebook-open-academy
- * GitHub: https://github.com/mrnullbox/facebook-open-academy
+ * GitHub: https://github.com/nullbox/facebook-open-academy
  *
  * json.zip is unzipped to filesJSON then analyzed and result stored result
  * This result is passed to browser when requested
@@ -45,16 +45,18 @@ if ('development' == app.get('env')) {
 }
 
 function printResult(result) {
-	console.info('Incident categories and occurrencies frequency/day between ' + result.from + ' - ' + result.to + '\n');
+	if (config.print) {
+		console.info('Incident categories and occurrencies frequency/day between ' + result.from + ' - ' + result.to + '\n');
 
-	for (var key in result.categories) {
-		console.log(key + ' ' + result.categories[key] / result.days);
-	}
+		for (var key in result.categories) {
+			console.log(key + ' ' + result.categories[key] / result.days);
+		}
 
-	console.info('Incident locations and occurrencies between ' + result.from + ' - ' + result.to + '\n');
+		console.info('Incident locations and occurrencies between ' + result.from + ' - ' + result.to + '\n');
 
-	for (var key in result.locations) {
-		console.log(key + ' ' + result.locations[key]);
+		for (var key in result.locations) {
+			console.log(key + ' ' + result.locations[key]);
+		}
 	}
 }
 
@@ -71,6 +73,8 @@ function startWorker(msg) {
 			console.log('Worker took: ' + (new Date().getTime() - startTime.getTime()) + " milliseconds");
 			result = data;
 			worker.send('exit');
+
+			printResult(result);
 		});
 
 		worker.on('exit', function(code) {
@@ -115,8 +119,7 @@ http.createServer(app).listen(app.get('port'), function() {
 
 				console.log('Analyzation file exist: ' + config.pathAnalyzation);
 				result = JSON.parse(data.toString());
-				if (config.print)
-					printResult(result);
+				printResult(result);
 			});
 		} else {
 			// Analyzation does not exist, starting worker
