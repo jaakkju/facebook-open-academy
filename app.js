@@ -137,11 +137,13 @@ app.get('/init', function(req, res) {
 		if (exists) {
 			fs.readFile(config.pathAnalyzation, function(err, data) {
 				if (err)
-					throw err;
-
-				console.log('Analyzation file exist: ' + config.pathAnalyzation);
-				result = JSON.parse(data.toString());
-				printResult(result);
+					console.error('Error while reading file ' + config.pathAnalyzation, err);
+				try {
+					result = JSON.parse(data.toString());
+					printResult(result);
+				} catch (err) {
+					console.error('Error while parsing ' + config.pathAnalyzation + " to JSON", err);
+				}
 			});
 		} else {
 			// Analyzation does not exist, starting worker
