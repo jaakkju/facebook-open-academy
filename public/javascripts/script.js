@@ -1,11 +1,11 @@
 $(document).ready(function() {
 	if (!data.done) {
-		timedRefresh(5000);
+		timedRefresh(10000);
 	} else {
 		// TODO This page refreshing while waiting for data could be done with background ajax call 
 		// To get it working more nicely
 		if (data.working)
-			timedRefresh(5000);
+			timedRefresh(10000);
 
 		var previousPoint = null;
 
