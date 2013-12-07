@@ -15,6 +15,10 @@ Before installing make sure you have working node.js and npm package manager
 
 ## Todo ##
 1. Display location information as a heat map with Google maps and leaflet
+2. Improve worker flow control in worker
+3. Make a prettier user interface
+4. Use ajax to check refresh so that the whole page does not refresh
+5. For production -> protect initialize and reset function with password
 
 ## Acknowledgements ##
 
