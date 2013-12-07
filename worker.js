@@ -25,7 +25,8 @@ function analyzeJSON(filesJSON) {
 		to : undefined,
 		days : 0,
 		categories : {},
-		locations : {}
+		locations : {},
+		incidents : {}
 	};
 
 	var fileCounter = filesJSON.length;
@@ -45,6 +46,13 @@ function analyzeJSON(filesJSON) {
 			if (result.to == undefined || result.to.getTime() < dateTo.getTime())
 				result.to = dateTo;
 
+			// Creating new year and month to object if does not exist
+			if (!result.incidents.hasOwnProperty(dateFrom.getFullYear())) 
+				result.incidents[dateFrom.getFullYear()] = {};
+
+			if (!result.incidents[dateFrom.getFullYear()].hasOwnProperty(dateFrom.getMonth())) 
+				result.incidents[dateFrom.getFullYear()][dateFrom.getMonth()] = 0;
+
 			var occurrencyCounter = day.asn.length;
 			day.asn.forEach(function(occurrency) {
 				occurrencyCounter--;
@@ -53,16 +61,21 @@ function analyzeJSON(filesJSON) {
 				occurrency.ipaddress.forEach(function(ipaddress) {
 					ipaddressCounter--;
 
+					var location = ipaddress.city + '-' + ipaddress.cc;
+
 					// Creating new location to object if does not exist
-					if (result.locations.hasOwnProperty(ipaddress.city)) {
-						result.locations[ipaddress.city]++;
+					if (result.locations.hasOwnProperty(location)) {
+						result.locations[location]++;
 					} else {
-						result.locations[ipaddress.city] = 1;
+						result.locations[location] = 1;
 					}
 
 					var incidentCounter = ipaddress.incident.length;
 					ipaddress.incident.forEach(function(incident) {
 						incidentCounter--;
+
+						// Counting every incident under a month
+						result.incidents[dateFrom.getFullYear()][dateFrom.getMonth()]++;
 
 						// Creating new category to object if does not exist
 						if (result.categories.hasOwnProperty(incident.category.main)) {

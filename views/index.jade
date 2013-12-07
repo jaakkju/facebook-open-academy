@@ -3,8 +3,8 @@ html
   head
     title= title
     link(rel='shortcut icon' href='/images/favicon.ico')
-    script(src="/javascripts/jquery.js")
-    script(src="/javascripts/jquery.flot.js")
+    script(src="/javascripts/jquery-1.10.2.min.js")
+    script(src="/javascripts/jquery.flot.min.js")
     script(src="/javascripts/jquery.tablesorter.js")
     link(rel='stylesheet', href='/stylesheets/style.css')
     script(src="/javascripts/script.js")
@@ -16,10 +16,12 @@ html
       h2= subtitle
       div#container
         div#chartContainer
+          h2 Incident categories
           div#chartcategories
-            h2 Categories chart
+          h2 Incident location
           div#chartlocations
-            h2 Locations chart
+          h2 Incidents timeline
+          div#chartTimeline          
         div#dataContainer
           table#categories
            thead
@@ -28,21 +30,22 @@ html
               th freq/day
            tbody
             - for(var category in result.categories) {
-              - var calc = (result.categories[category] / result.days).toFixed(3)
+              - var cate = (result.categories[category] / result.days).toFixed(3)
                 tr
                   td #{category}
-                  td= calc
+                  td= cate
             -}
           table#locations
            thead
             tr
               th Location
-              th sum
+              th freq/day
            tbody
             - for(var location in result.locations) {
+            - var lock = (result.locations[location] / result.days).toFixed(3)
                 tr
                   td #{location} 
-                  td #{result.locations[location]}
+                  td= lock
             -}
     if reset
       div.reset

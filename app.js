@@ -45,18 +45,35 @@ if ('development' == app.get('env')) {
 }
 
 function printResult(result) {
+	var from = new Date(result.from).toDateString();
+	var to = new Date(result.to).toDateString();
+	
 	if (config.print) {
-		console.info('Incident categories and occurrencies frequency/day between ' + result.from + ' - ' + result.to + '\n');
+		console.info('Incident categories and occurrencies frequency/day (' + result.categories.length + ') between ' + from + ' - ' + to + '\n');
 
 		for (var key in result.categories) {
 			console.log(key + ' ' + result.categories[key] / result.days);
 		}
 
-		console.info('Incident locations and occurrencies between ' + result.from + ' - ' + result.to + '\n');
+		console.info('Incident locations and occurrencies (' + result.locations.length + ') between ' + from + ' - ' + to + '\n');
 
 		for (var key in result.locations) {
-			console.log(key + ' ' + result.locations[key]);
+			console.log(key + ' ' + result.locations[key] / result.days);
 		}
+	}
+
+	if (config.days) {
+		console.info('Incident occurrences per month between ' + from + ' - ' + to + '\n');
+		
+		var months = 0, incidents = 0;
+		for (var year in result.incidents) {
+			for (var month in result.incidents[year]) {
+				months++;
+				incidents += result.incidents[year][month];
+				console.log(month + ':' + year + ' ' + result.incidents[year][month]);
+			}
+		}
+	console.log('Total ' + months + ' months ' + incidents + ' incidents');
 	}
 }
 
@@ -65,6 +82,8 @@ function startWorker(msg) {
 		result.working = true;
 
 		// Kicking off a new process to do the hard work, downloading the file and analyzation
+		console.info("Starting new fileworker process to do the heavy lifting");
+
 		var startTime = new Date();
 		var worker = require('child_process').fork(config.pathWorker);
 		worker.send(msg);

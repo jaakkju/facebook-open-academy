@@ -7,8 +7,12 @@ var config = module.exports = {};
 // set to true if you want analyzation to print analyzation result to console
 config.print = false;
 
+// Set true if you want to print occurrences per day to console
+config.days = false;
+
 // set true if you want to display reset button
 config.reset = true;
+
 
 // remote JSON file url
 config.JSON_url = 'http://pilvilinna.cert.fi/opendata/autoreporter/json.zip';
