@@ -47,10 +47,10 @@ function analyzeJSON(filesJSON) {
 				result.to = dateTo;
 
 			// Creating new year and month to object if does not exist
-			if (!result.incidents.hasOwnProperty(dateFrom.getFullYear())) 
+			if (!result.incidents.hasOwnProperty(dateFrom.getFullYear()))
 				result.incidents[dateFrom.getFullYear()] = {};
 
-			if (!result.incidents[dateFrom.getFullYear()].hasOwnProperty(dateFrom.getMonth())) 
+			if (!result.incidents[dateFrom.getFullYear()].hasOwnProperty(dateFrom.getMonth()))
 				result.incidents[dateFrom.getFullYear()][dateFrom.getMonth()] = 0;
 
 			var occurrencyCounter = day.asn.length;
@@ -144,47 +144,39 @@ function unZipData() {
 };
 
 function getZipfile() {
-	var lenght = 0;
-	var file = fs.createWriteStream(config.pathJSON);
-	var request = http.get(config.JSON_url, function(response) {
+	console.log('Checking if ' + config.pathFolder + ' exists, creating if does not');
 
-		var change = -1;
-		console.log('Downloading file.. ' + config.JSON_url);
+	fs.mkdir(config.pathFolder, function() {
+		var lenght = 0;
+		var file = fs.createWriteStream(config.pathJSON);
+		var request = http.get(config.JSON_url, function(response) {
 
-		response.on('data', function(chunk) {
-			file.write(chunk);
-			lenght += chunk.length;
+			var change = -1;
+			console.log('Downloading file.. ' + config.JSON_url);
 
-			var percent = Math.round((lenght / response.headers['content-length']) * 100);
+			response.on('data', function(chunk) {
+				file.write(chunk);
+				lenght += chunk.length;
 
-			if (change != percent) {
-				change = percent;
-				process.stdout.write(" " + percent + "%");
-			}
-		});
+				var percent = Math.round((lenght / response.headers['content-length']) * 100);
 
-		response.on('end', function() {
-			console.log();
-			file.close();
-		});
+				if (change != percent) {
+					change = percent;
+					process.stdout.write(" " + percent + "%");
+				}
+			});
 
-		file.on('close', function() {
-			unZipData();
+			response.on('end', function() {
+				console.log();
+				file.close();
+			});
+
+			file.on('close', function() {
+				unZipData();
+			});
 		});
 	});
 };
-
-function ensureDirectory() {
-	path.existsSync(config.pathFolder, function(exists) {
-		if (exists) {
-			getZipfile();
-		} else {
-			fs.mkdir(config.pathFolder, function() {
-				getZipfile();
-			});
-		}
-	});
-}
 
 // Worker process starts: analyzation file does not exist, checking json.zip
 process.on('message', function(data) {
@@ -194,7 +186,6 @@ process.on('message', function(data) {
 				console.warn(config.JSON + ' exists, but there is no ' + config.analyzation + ', starting unzip');
 				unZipData();
 			} else {
-				// json.zip does not exist downloading file
 				console.warn(config.JSON + ' file does not exist...');
 				getZipfile();
 			}
