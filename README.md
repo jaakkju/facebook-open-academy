@@ -14,6 +14,7 @@ Before installing make sure you have working node.js and npm package manager
 6. Sit back and relax while data in being downloaded
 
 ## Todo ##
+
 1. Display location information as a heat map with Google maps and leaflet
 2. Improve worker flow control in worker
 3. Make a prettier user interface
