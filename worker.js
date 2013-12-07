@@ -168,11 +168,9 @@ function getZipfile() {
 
 			response.on('end', function() {
 				console.log();
-				file.close();
-			});
-
-			file.on('close', function() {
-				unZipData();
+				file.close(function () {
+					unZipData();
+				});
 			});
 		});
 	});
