@@ -12,6 +12,9 @@ Before installing make sure you have working node.js and npm package manager
 4. Sit back and relax while file downloads and data structure is done
 5. Open browser to localhost:3000
 
+## Todo ##
+1. Display location information as a heat map with Google maps and leaflet
+
 ## Acknowledgements ##
 
 If you encounter following error: remove **cert-fi_data** folder and run the application again. 
