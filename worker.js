@@ -6,7 +6,7 @@
  *  analyzation, but offers a way for the mainteiner to download the file again.
  *
  *  Call chaing in this solution after creating http.createServer if file does not exist
- *  getZipZile -> unZipData -> analyzeData -> printAnalyzation
+ *  getZipZile -> unZipData -> analyzeData
  */
 
 var path = require('path');
