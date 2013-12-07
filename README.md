@@ -17,13 +17,13 @@ Before installing make sure you have working node.js and npm package manager
 
 1. Display location information as a heat map with Google maps and leaflet
 2. Improve worker flow control in worker
-*http://howtonode.org/control-flow
-*http://whaleventures.blogspot.de/2012/02/managing-callback-spaghetti-in-nodejs.html	
+* http://howtonode.org/control-flow
+* http://whaleventures.blogspot.de/2012/02/managing-callback-spaghetti-in-nodejs.html	
 3. Make a prettier user interface
 4. Use ajax to check refresh so that the whole page does not refresh
 5. For production -> protect initialize and reset function with password
 6. Use a logger for printing to console and add log levels
-*https://github.com/flatiron/winston
+* https://github.com/flatiron/winston
 
 ## Acknowledgements ##
 
