@@ -2,6 +2,11 @@ $(document).ready(function() {
 	if (!data.done) {
 		timedRefresh(5000);
 	} else {
+		// TODO This page refreshing while waiting for data could be done with background ajax call 
+		// To get it working more nicely
+		if (data.working)
+			timedRefresh(5000);
+
 		var previousPoint = null;
 
 		drawCategoriesHistogram();
@@ -175,10 +180,10 @@ $(document).ready(function() {
 				autoHighlight : true
 			},
 			xaxis : {
-				tickFormatter: function (val, axis) {
+				tickFormatter : function(val, axis) {
 					var x = new Date(val);
 					return month_names[x.getMonth()] + '/' + x.getFullYear();
-				} 
+				}
 			}
 
 		};

@@ -47,7 +47,13 @@ html
                   td #{location} 
                   td= lock
             -}
-    if reset
+    if init
+      div.reset
+        p Start initialization
+        form(action='/init', method='get')
+          input(type='submit', value='Start')    
+    
+    else if reset
       div.reset
         p Warning: reset makes the server download data again!
         form(action='/reset', method='get')

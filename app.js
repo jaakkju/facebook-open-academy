@@ -47,7 +47,7 @@ if ('development' == app.get('env')) {
 function printResult(result) {
 	var from = new Date(result.from).toDateString();
 	var to = new Date(result.to).toDateString();
-	
+
 	if (config.print) {
 		console.info('Incident categories and occurrencies frequency/day (' + result.categories.length + ') between ' + from + ' - ' + to + '\n');
 
@@ -64,7 +64,7 @@ function printResult(result) {
 
 	if (config.days) {
 		console.info('Incident occurrences per month between ' + from + ' - ' + to + '\n');
-		
+
 		var months = 0, incidents = 0;
 		for (var year in result.incidents) {
 			for (var month in result.incidents[year]) {
@@ -73,7 +73,7 @@ function printResult(result) {
 				console.log(month + ':' + year + ' ' + result.incidents[year][month]);
 			}
 		}
-	console.log('Total ' + months + ' months ' + incidents + ' incidents');
+		console.log('Total ' + months + ' months ' + incidents + ' incidents');
 	}
 }
 
@@ -113,6 +113,7 @@ app.get('/', function(req, res) {
 		title : result.done ? 'CERT-FI: Open Data - Statistics from Autoreporter' : 'Waiting for data...',
 		subtitle : result.done ? new Date(result.from).toDateString() + ' - ' + new Date(result.to).toDateString() : "",
 		reset : !result.working ? config.reset : false,
+		init : result.done ? false : true,
 		result : result
 	});
 });
@@ -126,10 +127,12 @@ app.get('/reset', function(req, res) {
 	}
 });
 
-http.createServer(app).listen(app.get('port'), function() {
-	console.log('Express server listening on port ' + app.get('port'));
+app.get('/init', function(req, res) {
+	res.redirect('back');
 
+	console.log('Init call received, checking if data exists');
 	fs.exists(config.pathAnalyzation, function(exists) {
+
 		// If analyzation exists we just read the data to variable
 		if (exists) {
 			fs.readFile(config.pathAnalyzation, function(err, data) {
@@ -145,4 +148,9 @@ http.createServer(app).listen(app.get('port'), function() {
 			startWorker('start');
 		}
 	});
+
+});
+
+http.createServer(app).listen(app.get('port'), function() {
+	console.log('Express server listening on port ' + app.get('port'));
 });
