@@ -105,8 +105,11 @@ function analyzeJSON(filesJSON) {
 							result.done = true;
 
 							fs.writeFile(config.pathAnalyzation, JSON.stringify(result), function(err) {
-								if (err)
+								if (err) {
 									logger.error('Error while result file to ' + config.pathAnalyzation + ', Error: ',err);
+									process.exit(1);
+								}
+									
 								logger.info('Analyzation saved to file ' + config.pathAnalyzation);
 							});
 
