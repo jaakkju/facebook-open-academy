@@ -7,7 +7,7 @@
  *
  *  Call chaing in this solution after creating http.createServer if file does not exist
  *  getZipZile -> unZipData -> analyzeData
- * 
+ *
  *  callbacks are stored in actions array and then called one by one with callback function,
  *  this way functions are no more bound to each other
  */
@@ -159,7 +159,7 @@ var unZipData = function unZipData() {
 						callback(filesJSON);
 				} catch(err) {
 					fs.unlink(config.pathJSON, function() {
-						logger.error('JSON parsing failed, deleting existing file, please try again', err);
+						logger.error('Error while parsing ' + config.JSON + ', deleting existing file, please try again', err);
 						process.exit(1);
 					});
 				}
@@ -167,7 +167,7 @@ var unZipData = function unZipData() {
 		});
 	} catch(err) {
 		fs.unlink(config.pathJSON, function() {
-			logger.error('Reading ' + config.JSON + ' failed, deleting existing file, please try again', err);
+			logger.error('Error while reading ' + config.JSON + ' failed, deleting existing file, please try again', err);
 			process.exit(1);
 		});
 	}
@@ -196,8 +196,13 @@ var getZipFile = function getZipfile() {
 				}
 			});
 
-			// TODO Create error handler for event error
-			
+			response.on('error', function() {
+				fs.unlink(config.pathJSON, function() {
+					logger.error('Error while downloading ' + config.JSON + ', deleting existing file, please try again', err);
+					process.exit(1);
+				});
+			});
+
 			response.on('end', function() {
 				console.log();
 				file.close();
