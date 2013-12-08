@@ -22,6 +22,13 @@ config.JSON = 'json.zip';
 config.analyzation = 'result.json';
 config.folder = 'cert-fi_data';
 
+// Log level for console [info, warn, error]
+config.console = 'info';
+
+// Log level for file [info, warn, error] 
+config.file = 'warn';
+config.log = 'app.log';
+
 // Worker file name
 config.worker = 'worker.js';
 
@@ -30,3 +37,4 @@ config.pathJSON = path.join(__dirname, config.folder, config.JSON);
 config.pathAnalyzation = path.join(__dirname, config.folder, config.analyzation);
 config.pathFolder = path.join(__dirname, config.folder);
 config.pathWorker = path.join(__dirname, config.worker);
+config.pathLog = path.join(__dirname, config.log);
