@@ -18,11 +18,23 @@ var express = require('express');
 var http = require('http');
 var path = require('path');
 var fs = require('fs');
-var admZip = require('adm-zip');
+var winston = require('winston');
 var app = express();
 
 // Configuration file
 var config = require(path.join(__dirname, 'config.js'));
+
+var logger = new winston.Logger({
+	transports : [new winston.transports.Console({
+		level : config.console,
+		handleExceptions : true,
+		colorize: true
+	}), new winston.transports.File({
+		filename : config.pathLog,
+		level : config.file,
+		handleExceptions : true
+	})],
+});
 
 // Aanalyzation result
 var result = {};
@@ -49,31 +61,31 @@ function printResult(result) {
 	var to = new Date(result.to).toDateString();
 
 	if (config.print) {
-		console.info('Incident categories and occurrencies frequency/day (' + result.categories.length + ') between ' + from + ' - ' + to + '\n');
+		logger.info('Incident categories and occurrencies frequency/day (' + result.categories.length + ') between ' + from + ' - ' + to + '\n');
 
 		for (var key in result.categories) {
-			console.log(key + ' ' + result.categories[key] / result.days);
+			logger.info(key + ' ' + result.categories[key] / result.days);
 		}
 
-		console.info('Incident locations and occurrencies (' + result.locations.length + ') between ' + from + ' - ' + to + '\n');
+		logger.info('Incident locations and occurrencies (' + result.locations.length + ') between ' + from + ' - ' + to + '\n');
 
 		for (var key in result.locations) {
-			console.log(key + ' ' + result.locations[key] / result.days);
+			logger.log(key + ' ' + result.locations[key] / result.days);
 		}
 	}
 
 	if (config.days) {
-		console.info('Incident occurrences per month between ' + from + ' - ' + to + '\n');
+		logger.info('Incident occurrences per month between ' + from + ' - ' + to + '\n');
 
 		var months = 0, incidents = 0;
 		for (var year in result.incidents) {
 			for (var month in result.incidents[year]) {
 				months++;
 				incidents += result.incidents[year][month];
-				console.log(month + ':' + year + ' ' + result.incidents[year][month]);
+				logger.info(month + ':' + year + ' ' + result.incidents[year][month]);
 			}
 		}
-		console.log('Total ' + months + ' months ' + incidents + ' incidents');
+		logger.info('Total ' + months + ' months ' + incidents + ' incidents');
 	}
 }
 
@@ -82,14 +94,14 @@ function startWorker(msg) {
 		result.working = true;
 
 		// Kicking off a new process to do the hard work, downloading the file and analyzation
-		console.info("Starting new fileworker process to do the heavy lifting");
+		logger.warn("Starting new fileworker process to do the heavy lifting");
 
 		var startTime = new Date();
 		var worker = require('child_process').fork(config.pathWorker);
 		worker.send(msg);
 
 		worker.on('message', function(data) {
-			console.log('Worker took: ' + (new Date().getTime() - startTime.getTime()) + " milliseconds");
+			logger.info('Worker took: ' + (new Date().getTime() - startTime.getTime()) + " milliseconds");
 			result = data;
 			worker.send('exit');
 
@@ -98,10 +110,10 @@ function startWorker(msg) {
 
 		worker.on('exit', function(code) {
 			if (code) {
-				console.error('Exiting worker process abnormaly, pid: ' + process.pid);
+				logger.warn('Exiting worker process abnormaly, pid: ' + process.pid);
 				result.working = false;
 			} else {
-				console.log('Ending worker process, pid: ' + process.pid);
+				logger.info('Ending worker process, pid: ' + process.pid);
 				result.working = false;
 			}
 		});
@@ -122,7 +134,7 @@ app.get('/reset', function(req, res) {
 	res.redirect('back');
 
 	if (config.reset) {
-		console.warn('Reset call received, downloading data again');
+		logger.warn('Reset call received, downloading data again');
 		startWorker('reset');
 	}
 });
@@ -130,19 +142,19 @@ app.get('/reset', function(req, res) {
 app.get('/init', function(req, res) {
 	res.redirect('back');
 
-	console.log('Init call received, checking if data exists');
+	logger.info('Init call received, checking if data exists');
 	fs.exists(config.pathAnalyzation, function(exists) {
 
 		// If analyzation exists we just read the data to variable
 		if (exists) {
 			fs.readFile(config.pathAnalyzation, function(err, data) {
 				if (err)
-					console.error('Error while reading file ' + config.pathAnalyzation, err);
+					logger.error('Error while reading file ' + config.pathAnalyzation, err);
 				try {
 					result = JSON.parse(data.toString());
 					printResult(result);
 				} catch (err) {
-					console.error('Error while parsing ' + config.pathAnalyzation + " to JSON", err);
+					logger.error('Error while parsing ' + config.pathAnalyzation + " to JSON", err);
 				}
 			});
 		} else {
@@ -154,5 +166,5 @@ app.get('/init', function(req, res) {
 });
 
 http.createServer(app).listen(app.get('port'), function() {
-	console.log('Express server listening on port ' + app.get('port'));
+	logger.info('Express server listening on port ' + app.get('port'));
 });

@@ -13,12 +13,25 @@ var path = require('path');
 var fs = require('fs');
 var admZip = require('adm-zip');
 var http = require('http');
+var winston = require('winston');
 
 // Configuration file
 var config = require(path.join(__dirname, 'config.js'));
 
+var logger = new winston.Logger({
+	transports : [new winston.transports.Console({
+		level : config.console,
+		handleExceptions : true,
+		colorize : true
+	}), new winston.transports.File({
+		filename : config.pathLog,
+		level : config.file,
+		handleExceptions : true
+	})],
+});
+
 function analyzeJSON(filesJSON) {
-	console.info("Data structure ready, starting to analyze data...");
+	logger.info("Data structure ready, starting to analyze data...");
 
 	var result = {
 		from : undefined,
@@ -93,8 +106,8 @@ function analyzeJSON(filesJSON) {
 
 							fs.writeFile(config.pathAnalyzation, JSON.stringify(result), function(err) {
 								if (err)
-									throw err;
-								console.log('Analyzation saved to file ' + config.pathAnalyzation);
+									logger.error('Error while result file to ' + config.pathAnalyzation + ', Error: ',err);
+								logger.info('Analyzation saved to file ' + config.pathAnalyzation);
 							});
 
 							// Pass results back to parent process
@@ -113,7 +126,7 @@ function unZipData() {
 		var zip = new admZip(config.pathJSON);
 		var zipEntries = zip.getEntries();
 
-		console.info(config.JSON + " contains " + zipEntries.length + " files, extracting to array");
+		logger.info(config.JSON + " contains " + zipEntries.length + " files, extracting to array");
 		var filesJSON = new Array(zipEntries.length);
 
 		// Unzippping everything to data array as JSON objects then exec callback
@@ -124,27 +137,27 @@ function unZipData() {
 			var entryName = entry.entryName;
 
 			zip.readAsTextAsync(entry, function(data) {
-				console.log('Decompressing ' + entryName + ' as a JSON object to array index ' + index);
+				logger.info('Decompressing ' + entryName + ' as a JSON object to array index ' + index);
 
 				try {
 					filesJSON[index++] = JSON.parse(data);
 					if (index == zipEntries.length)
 						analyzeJSON(filesJSON);
 				} catch(err) {
-					console.error('JSON parsing failed, please delete existing file and try again. Error: ', err);
+					logger.error('JSON parsing failed, please delete existing file and try again. Error: ', err);
 					process.exit(1);
 				}
 			});
 		});
 	} catch(err) {
-		console.error('Reading ' + config.JSON + ' failed, please delete existing file and try again. Error:', err);
+		logger.error('Reading ' + config.JSON + ' failed, please delete existing file and try again. Error:', err);
 		process.exit(1);
 	}
 
 };
 
 function getZipfile() {
-	console.log('Checking if ' + config.pathFolder + ' exists, creating if does not');
+	logger.info('Checking if ' + config.pathFolder + ' exists, creating if does not');
 
 	fs.mkdir(config.pathFolder, function() {
 		var lenght = 0;
@@ -152,7 +165,7 @@ function getZipfile() {
 		var request = http.get(config.JSON_url, function(response) {
 
 			var change = -1;
-			console.log('Downloading file.. ' + config.JSON_url);
+			logger.info('Downloading file.. ' + config.JSON_url);
 
 			response.on('data', function(chunk) {
 				file.write(chunk);
@@ -181,10 +194,10 @@ process.on('message', function(data) {
 	if (data === 'start') {
 		fs.exists(config.pathJSON, function(exists) {
 			if (exists) {
-				console.warn(config.JSON + ' exists, but there is no ' + config.analyzation + ', starting unzip');
+				logger.warn(config.JSON + ' exists, but there is no ' + config.analyzation + ', starting unzip');
 				unZipData();
 			} else {
-				console.warn(config.JSON + ' file does not exist...');
+				logger.warn(config.JSON + ' file does not exist...');
 				getZipfile();
 			}
 		});
