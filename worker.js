@@ -111,7 +111,7 @@ function analyzeJSON(filesJSON) {
 								}
 
 								logger.info('Analyzation saved to file ' + config.pathAnalyzation);
-								
+
 								// Pass results back to parent process
 								process.send(result);
 							});
@@ -147,16 +147,19 @@ var unZipData = function unZipData() {
 					if (index == zipEntries.length)
 						analyzeJSON(filesJSON);
 				} catch(err) {
-					logger.error('JSON parsing failed, please delete existing file and try again. Error: ', err);
-					process.exit(1);
+					fs.unlink(config.pathJSON, function() {
+						logger.error('JSON parsing failed, deleting existing file, please try again. Error: ', err);
+						process.exit(1);
+					});
 				}
 			});
 		});
 	} catch(err) {
-		logger.error('Reading ' + config.JSON + ' failed, please delete existing file and try again. Error:', err);
-		process.exit(1);
+		fs.unlink(config.pathJSON, function() {
+			logger.error('Reading ' + config.JSON + ' failed, deleting existing file, please try again. Error:', err);
+			process.exit(1);
+		});
 	}
-
 };
 
 function getZipfile() {

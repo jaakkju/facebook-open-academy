@@ -7,11 +7,13 @@
 Before installing make sure you have working node.js and npm package manager
 
 1. Download files from GitHub - https://github.com/mrnullbox/facebook-open-academy
-2. Run > npm install
+2. Run > npm install in facebook-open-academy folder
 3. Run application > node app.js
 4. Open browser to localhost:3000
 5. Click start initialization
 6. Sit back and relax while data in being downloaded
+
+Note! If initialization or reset fails because of the error below just click the button again.
 
 ## Todo ##
 
