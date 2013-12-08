@@ -33,7 +33,7 @@ var logger = new winston.Logger({
 function saveAndSendResult(result) {
 	fs.writeFile(config.pathAnalyzation, JSON.stringify(result), function(err) {
 		if (err) {
-			logger.error('Error while result file to ' + config.pathAnalyzation + ', Error: ', err);
+			logger.error('Error while result file to ' + config.pathAnalyzation, err);
 			process.exit(1);
 		}
 
@@ -151,7 +151,7 @@ var unZipData = function unZipData() {
 						analyzeJSON(filesJSON);
 				} catch(err) {
 					fs.unlink(config.pathJSON, function() {
-						logger.error('JSON parsing failed, deleting existing file, please try again. Error: ', err);
+						logger.error('JSON parsing failed, deleting existing file, please try again', err);
 						process.exit(1);
 					});
 				}
@@ -159,7 +159,7 @@ var unZipData = function unZipData() {
 		});
 	} catch(err) {
 		fs.unlink(config.pathJSON, function() {
-			logger.error('Reading ' + config.JSON + ' failed, deleting existing file, please try again. Error:', err);
+			logger.error('Reading ' + config.JSON + ' failed, deleting existing file, please try again', err);
 			process.exit(1);
 		});
 	}
