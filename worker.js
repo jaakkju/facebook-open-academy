@@ -30,6 +30,20 @@ var logger = new winston.Logger({
 	})],
 });
 
+function saveAndSendResult(result) {
+	fs.writeFile(config.pathAnalyzation, JSON.stringify(result), function(err) {
+		if (err) {
+			logger.error('Error while result file to ' + config.pathAnalyzation + ', Error: ', err);
+			process.exit(1);
+		}
+
+		logger.info('Analyzation saved to file ' + config.pathAnalyzation);
+
+		// Pass results back to parent process
+		process.send(result);
+	});
+}
+
 function analyzeJSON(filesJSON) {
 	logger.info("Data structure ready, starting to analyze data...");
 
@@ -103,18 +117,7 @@ function analyzeJSON(filesJSON) {
 							result.days = Math.abs((result.from.getTime() - result.to.getTime()) / (oneDay));
 
 							result.done = true;
-
-							fs.writeFile(config.pathAnalyzation, JSON.stringify(result), function(err) {
-								if (err) {
-									logger.error('Error while result file to ' + config.pathAnalyzation + ', Error: ', err);
-									process.exit(1);
-								}
-
-								logger.info('Analyzation saved to file ' + config.pathAnalyzation);
-
-								// Pass results back to parent process
-								process.send(result);
-							});
+							saveAndSendResult(result);
 						}
 					});
 				});
@@ -191,6 +194,7 @@ function getZipfile() {
 			});
 
 			file.on('close', function() {
+				// We give some time for the writer to finnish
 				process.nextTick(unZipData);
 			});
 		});
