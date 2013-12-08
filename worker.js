@@ -106,15 +106,15 @@ function analyzeJSON(filesJSON) {
 
 							fs.writeFile(config.pathAnalyzation, JSON.stringify(result), function(err) {
 								if (err) {
-									logger.error('Error while result file to ' + config.pathAnalyzation + ', Error: ',err);
+									logger.error('Error while result file to ' + config.pathAnalyzation + ', Error: ', err);
 									process.exit(1);
 								}
-									
-								logger.info('Analyzation saved to file ' + config.pathAnalyzation);
-							});
 
-							// Pass results back to parent process
-							process.send(result);
+								logger.info('Analyzation saved to file ' + config.pathAnalyzation);
+								
+								// Pass results back to parent process
+								process.send(result);
+							});
 						}
 					});
 				});
@@ -123,7 +123,7 @@ function analyzeJSON(filesJSON) {
 	});
 };
 
-function unZipData() {
+var unZipData = function unZipData() {
 
 	try {
 		var zip = new admZip(config.pathJSON);
@@ -184,9 +184,11 @@ function getZipfile() {
 
 			response.on('end', function() {
 				console.log();
-				file.close(function () {
-					unZipData();
-				});
+				file.close();
+			});
+
+			file.on('close', function() {
+				process.nextTick(unZipData);
 			});
 		});
 	});
