@@ -26,7 +26,7 @@ config.folder = 'cert-fi_data';
 config.console = 'info';
 
 // Log level for file [info, warn, error] 
-config.file = 'warn';
+config.file = 'error';
 config.log = 'app.log';
 
 // Worker file name
