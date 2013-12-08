@@ -7,6 +7,9 @@
  *
  *  Call chaing in this solution after creating http.createServer if file does not exist
  *  getZipZile -> unZipData -> analyzeData
+ * 
+ *  callbacks are stored in actions array and then called one by one with callback function,
+ *  this way functions are no more bound to each other
  */
 
 var path = require('path');
@@ -17,7 +20,7 @@ var winston = require('winston');
 
 // Configuration file
 var config = require(path.join(__dirname, 'config.js'));
-
+var actions;
 var logger = new winston.Logger({
 	transports : [new winston.transports.Console({
 		level : config.console,
@@ -30,21 +33,27 @@ var logger = new winston.Logger({
 	})],
 });
 
-function saveAndSendResult(result) {
+var callback = function proceed(param) {
+	if (actions.length) {
+		actions.shift()(param);
+	}
+};
+
+var saveAndSendResult = function saveAndSendResult(result) {
 	fs.writeFile(config.pathAnalyzation, JSON.stringify(result), function(err) {
 		if (err) {
 			logger.error('Error while result file to ' + config.pathAnalyzation, err);
 			process.exit(1);
 		}
-
 		logger.info('Analyzation saved to file ' + config.pathAnalyzation);
 
 		// Pass results back to parent process
 		process.send(result);
+		callback();
 	});
-}
+};
 
-function analyzeJSON(filesJSON) {
+var analyzeJSON = function analyzeJSON(filesJSON) {
 	logger.info("Data structure ready, starting to analyze data...");
 
 	var result = {
@@ -117,7 +126,7 @@ function analyzeJSON(filesJSON) {
 							result.days = Math.abs((result.from.getTime() - result.to.getTime()) / (oneDay));
 
 							result.done = true;
-							saveAndSendResult(result);
+							callback(result);
 						}
 					});
 				});
@@ -127,7 +136,6 @@ function analyzeJSON(filesJSON) {
 };
 
 var unZipData = function unZipData() {
-
 	try {
 		var zip = new admZip(config.pathJSON);
 		var zipEntries = zip.getEntries();
@@ -148,7 +156,7 @@ var unZipData = function unZipData() {
 				try {
 					filesJSON[index++] = JSON.parse(data);
 					if (index == zipEntries.length)
-						analyzeJSON(filesJSON);
+						callback(filesJSON);
 				} catch(err) {
 					fs.unlink(config.pathJSON, function() {
 						logger.error('JSON parsing failed, deleting existing file, please try again', err);
@@ -165,7 +173,7 @@ var unZipData = function unZipData() {
 	}
 };
 
-function getZipfile() {
+var getZipFile = function getZipfile() {
 	logger.info('Checking if ' + config.pathFolder + ' exists, creating if does not');
 
 	fs.mkdir(config.pathFolder, function() {
@@ -188,14 +196,15 @@ function getZipfile() {
 				}
 			});
 
+			// TODO Create error handler for event error
+			
 			response.on('end', function() {
 				console.log();
 				file.close();
 			});
 
 			file.on('close', function() {
-				// We give some time for the writer to finnish
-				process.nextTick(unZipData);
+				process.nextTick(callback);
 			});
 		});
 	});
@@ -207,14 +216,17 @@ process.on('message', function(data) {
 		fs.exists(config.pathJSON, function(exists) {
 			if (exists) {
 				logger.warn(config.JSON + ' exists, but there is no ' + config.analyzation + ', starting unzip');
-				unZipData();
+				actions = [unZipData, analyzeJSON, saveAndSendResult];
+				callback();
 			} else {
 				logger.warn(config.JSON + ' file does not exist...');
-				getZipfile();
+				actions = [getZipFile, unZipData, analyzeJSON, saveAndSendResult];
+				callback();
 			}
 		});
 	} else if (data === 'reset') {
-		getZipfile();
+		actions = [getZipFile, unZipData, analyzeJSON, saveAndSendResult];
+		callback();
 	} else if (data === 'exit') {
 		process.exit(0);
 	}
