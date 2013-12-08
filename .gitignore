@@ -3,7 +3,11 @@
 
 node_modules/
 
+# Log files
+###########
+*.log
+
 # Settings
-##############################
+###########
 .project
 cert-fi_data/*
