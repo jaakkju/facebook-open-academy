@@ -19,10 +19,9 @@ Note! If initialization or reset fails because of the error below just click the
 
 1. Display location information as a heat map with Google maps and leaflet
 2. Improve worker flow control in worker
-3. Make a prettier user interface
-4. Use ajax to check refresh so that the whole page does not refresh
-5. For production -> protect initialize and reset function with password
-6. Use a logger for printing to console and add log levels
+3. Use ajax to check refresh so that the whole page does not refresh or socket-IO
+4. For production -> protect initialize and reset function with password
+5. For production -> make a prettier user interface
 
 **Links to sources**
 * http://howtonode.org/control-flow
